@@ -32,14 +32,107 @@ jobs:
           import re
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
+
+          # Keep brand assets as ordinary paths.
           s=re.sub(r'<img\s+data-asset="logo"', '<img src="assets/logo.webp"', s)
           s=re.sub(r'<img\s+data-asset="dragon"', '<img src="assets/dragon-hq.webp"', s)
+
+          # Remove older stabilization includes to avoid duplicate handlers.
           s=re.sub(r'<link rel="stylesheet" href="assets/site-fix\.css[^>]*>\s*','',s)
           s=re.sub(r'<script[^>]+src="assets/site-fix\.js[^>]*></script>\s*','',s)
           s=re.sub(r'<link rel="icon"[^>]*favicon-dragon\.png[^>]*>\s*','',s)
-          s=s.replace('</head>','<link rel="stylesheet" href="assets/site-fix.css?v=10">\n<link rel="icon" type="image/png" href="assets/favicon-dragon.png?v=10">\n</head>')
-          s=s.replace('</body>','<script src="assets/site-fix.js?v=10"></script>\n</body>')
+
+          # Give menu controls real href fallbacks.
+          def nav_button(m):
+              attrs1,target,attrs2,inner=m.groups()
+              return f'<a class="navlink"{attrs1} data-go="{target}"{attrs2} href="#{target}">{inner}</a>'
+          s=re.sub(r'<button class="navlink"([^>]*)\sdata-go="([^"]+)"([^>]*)>(.*?)</button>',nav_button,s,flags=re.S)
+
+          inline_js = r'''<script>
+          (() => {
+            'use strict';
+            const valid = new Set(['home','about','products','services','contact']);
+            const menuBtn = document.getElementById('menuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+
+            function closeMenu(){
+              if(mobileMenu){ mobileMenu.classList.remove('open'); mobileMenu.style.display=''; }
+              if(menuBtn) menuBtn.setAttribute('aria-expanded','false');
+            }
+
+            function showPage(id, push=true){
+              if(!valid.has(id)) id='home';
+              document.querySelectorAll('.view').forEach(v => {
+                const on = v.id === id;
+                v.classList.toggle('active', on);
+                v.style.display = on ? 'block' : 'none';
+              });
+              document.querySelectorAll('[data-go]').forEach(el => {
+                el.classList.toggle('active', el.dataset.go === id);
+              });
+              closeMenu();
+              if(push){
+                const u = id === 'home' ? location.pathname + location.search : '#' + id;
+                history.pushState({page:id},'',u);
+              }
+              window.scrollTo(0,0);
+            }
+
+            // Burger: direct handler, independent from all legacy code.
+            if(menuBtn && mobileMenu){
+              menuBtn.setAttribute('aria-expanded','false');
+              menuBtn.addEventListener('click', e => {
+                e.preventDefault();
+                e.stopPropagation();
+                const open = !mobileMenu.classList.contains('open');
+                mobileMenu.classList.toggle('open', open);
+                mobileMenu.style.display = open ? 'grid' : '';
+                menuBtn.setAttribute('aria-expanded', String(open));
+              }, true);
+            }
+
+            // Navigation + CTA buttons.
+            document.addEventListener('click', e => {
+              const t = e.target.closest('[data-go]');
+              if(!t || !valid.has(t.dataset.go)) return;
+              e.preventDefault();
+              e.stopPropagation();
+              showPage(t.dataset.go, true);
+            }, true);
+
+            // Click outside closes mobile menu.
+            document.addEventListener('click', e => {
+              if(!mobileMenu || !menuBtn) return;
+              if(!mobileMenu.contains(e.target) && !menuBtn.contains(e.target)) closeMenu();
+            });
+
+            document.addEventListener('keydown', e => { if(e.key === 'Escape') closeMenu(); });
+            window.addEventListener('popstate', () => showPage((location.hash||'#home').slice(1), false));
+            window.addEventListener('hashchange', () => showPage((location.hash||'#home').slice(1), false));
+
+            // Product filters.
+            document.querySelectorAll('.filter').forEach(btn => {
+              btn.addEventListener('click', e => {
+                e.preventDefault();
+                document.querySelectorAll('.filter').forEach(x => x.classList.remove('on'));
+                btn.classList.add('on');
+                const f=btn.dataset.filter;
+                document.querySelectorAll('.products-grid .game-card').forEach(card => {
+                  const cats=(card.dataset.cat||'').split(' ');
+                  card.classList.toggle('hidden', f !== 'all' && !cats.includes(f));
+                });
+              }, true);
+            });
+
+            // Start from current hash.
+            showPage((location.hash||'#home').slice(1), false);
+          })();
+          </script>'''
+
+          s=s.replace('</head>','<link rel="stylesheet" href="assets/site-fix.css?v=12">\n<link rel="icon" type="image/png" href="assets/favicon-dragon.png?v=12">\n</head>')
+          s=s.replace('</body>',inline_js+'\n</body>')
           p.write_text(s,encoding='utf-8')
+
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:
