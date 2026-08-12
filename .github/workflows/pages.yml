@@ -23,20 +23,29 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      - name: Use high-quality dragon asset
+
+      - name: Inject stable site layer
         shell: python
         run: |
           from pathlib import Path
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
-          s = s.replace('"dragon":"assets/dragon.png"', '"dragon":"assets/dragon-q100.webp"')
+          css = '<link rel="stylesheet" href="assets/site-fix.css?v=4">\n<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-dragon.png?v=4">\n'
+          js = '<script src="assets/site-fix.js?v=4"></script>\n'
+          if 'assets/site-fix.css' not in s:
+              s = s.replace('</head>', css + '</head>')
+          if 'assets/site-fix.js' not in s:
+              s = s.replace('</body>', js + '</body>')
           p.write_text(s, encoding='utf-8')
+
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
