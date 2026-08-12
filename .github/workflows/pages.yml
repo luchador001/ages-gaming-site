@@ -23,63 +23,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Pages
         uses: actions/configure-pages@v5
-
-      - name: Build stable AGES Gaming page
-        shell: python
-        run: |
-          from pathlib import Path
-          import re
-
-          p = Path('index.html')
-          s = p.read_text(encoding='utf-8')
-
-          # Direct file paths: no JavaScript is required for the logo or mascot to render.
-          s = re.sub(r'<img\s+data-asset="logo"', '<img src="assets/logo.webp"', s)
-          s = re.sub(r'<img\s+data-asset="dragon"', '<img src="assets/dragon.webp"', s)
-
-          # Convert menu buttons to real links while keeping the existing SPA enhancement.
-          def nav_button(match):
-              classes, before, target, after, inner = match.groups()
-              return f'<a class="{classes}"{before} data-go="{target}"{after} href="#{target}">{inner}</a>'
-
-          s = re.sub(
-              r'<button class="([^"]*\bnavlink\b[^"]*)"([^>]*)\sdata-go="([^"]+)"([^>]*)>(.*?)</button>',
-              nav_button,
-              s,
-              flags=re.S
-          )
-
-          # Favicon and stabilization layer.
-          css = '<link rel="stylesheet" href="assets/site-fix.css?v=8">\n<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-dragon.png?v=8">\n<link rel="shortcut icon" type="image/png" href="assets/favicon-dragon.png?v=8">\n'
-          js = '<script src="assets/site-fix.js?v=8"></script>\n'
-          s = re.sub(r'<link rel="stylesheet" href="assets/site-fix\.css[^>]*>\s*', '', s)
-          s = re.sub(r'<link rel="icon"[^>]*favicon-dragon\.png[^>]*>\s*', '', s)
-          s = re.sub(r'<link rel="shortcut icon"[^>]*>\s*', '', s)
-          s = re.sub(r'<script src="assets/site-fix\.js[^>]*></script>\s*', '', s)
-          s = s.replace('</head>', css + '</head>')
-          s = s.replace('</body>', js + '</body>')
-          p.write_text(s, encoding='utf-8')
-
-          required = [
-              Path('assets/logo.webp'),
-              Path('assets/dragon.webp'),
-              Path('assets/favicon-dragon.png'),
-              Path('assets/site-fix.css'),
-              Path('assets/site-fix.js'),
-          ]
-          for f in required:
-              if not f.exists() or f.stat().st_size < 100:
-                  raise RuntimeError(f'Missing or invalid asset: {f}')
-          print('AGES assets verified:', {str(f): f.stat().st_size for f in required})
-
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
