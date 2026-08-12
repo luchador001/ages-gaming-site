@@ -31,37 +31,55 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
-          import re
+          import re, base64, hashlib
+
+          # Reassemble the exact high-quality dragon uploaded by the user.
+          parts = sorted(Path('.build/dragon').glob('*.txt'))
+          if len(parts) != 8:
+              raise RuntimeError(f'Expected 8 dragon parts, found {len(parts)}')
+          encoded = ''.join(p.read_text(encoding='utf-8').strip() for p in parts)
+          raw = base64.b64decode(encoded, validate=True)
+          digest = hashlib.sha256(raw).hexdigest()
+          if len(raw) != 67656:
+              raise RuntimeError(f'Unexpected dragon size: {len(raw)}')
+          if digest != 'b2679bca451e27774ff4423b3b1e38814f03237eb0d5fa736f8e04e3c248c417':
+              raise RuntimeError(f'Unexpected dragon sha256: {digest}')
+          if raw[:4] != b'RIFF' or raw[8:12] != b'WEBP':
+              raise RuntimeError('Dragon is not a valid WebP container')
+          Path('assets/dragon-hq2.webp').write_bytes(raw)
 
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
 
-          # Brand images must work even when JavaScript does not.
-          s = re.sub(r'<img\s+data-asset="logo"', '<img src="assets/logo.webp" data-asset="logo"', s)
-          s = re.sub(r'<img\s+data-asset="dragon"', '<img src="assets/dragon-hq.webp" data-asset="dragon"', s)
+          # Critical images are ordinary HTML paths, not JavaScript-driven assets.
+          s = re.sub(r'<img\s+data-asset="logo"', '<img src="assets/logo.webp"', s)
+          s = re.sub(r'<img\s+data-asset="dragon"', '<img src="assets/dragon-hq2.webp"', s)
 
-          # Give every navigation control a real URL fallback.
+          # Real hrefs for desktop/mobile navigation; JS enhances them into SPA switching.
           def nav_button(match):
-              attrs1, target, attrs2, inner = match.groups()
-              return f'<a class="navlink"{attrs1} data-go="{target}"{attrs2} href="#{target}">{inner}</a>'
-          s = re.sub(r'<button class="navlink"([^>]*)\sdata-go="([^"]+)"([^>]*)>(.*?)</button>', nav_button, s, flags=re.S)
+              classes, before, target, after, inner = match.groups()
+              return f'<a class="{classes}"{before} data-go="{target}"{after} href="#{target}">{inner}</a>'
+          s = re.sub(
+              r'<button class="([^"]*\bnavlink\b[^"]*)"([^>]*)\sdata-go="([^"]+)"([^>]*)>(.*?)</button>',
+              nav_button,
+              s,
+              flags=re.S
+          )
 
-          # Cache-busted stabilization layer and favicon.
-          css = '<link rel="stylesheet" href="assets/site-fix.css?v=6">\n<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-dragon.png?v=6">\n<link rel="shortcut icon" href="assets/favicon-dragon.png?v=6">\n'
-          js = '<script src="assets/site-fix.js?v=6"></script>\n'
+          # Cache-busted stabilization layer, favicon made from the dragon head.
+          css = '<link rel="stylesheet" href="assets/site-fix.css?v=7">\n<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-dragon.png?v=7">\n<link rel="shortcut icon" type="image/png" href="assets/favicon-dragon.png?v=7">\n'
+          js = '<script src="assets/site-fix.js?v=7"></script>\n'
           s = re.sub(r'<link rel="stylesheet" href="assets/site-fix\.css[^>]*>\s*', '', s)
           s = re.sub(r'<link rel="icon"[^>]*favicon-dragon\.png[^>]*>\s*', '', s)
           s = re.sub(r'<link rel="shortcut icon"[^>]*>\s*', '', s)
           s = re.sub(r'<script src="assets/site-fix\.js[^>]*></script>\s*', '', s)
           s = s.replace('</head>', css + '</head>')
           s = s.replace('</body>', js + '</body>')
-
           p.write_text(s, encoding='utf-8')
 
-          # Fail the build instead of publishing missing critical files.
           required = [
               Path('assets/logo.webp'),
-              Path('assets/dragon-hq.webp'),
+              Path('assets/dragon-hq2.webp'),
               Path('assets/favicon-dragon.png'),
               Path('assets/site-fix.css'),
               Path('assets/site-fix.js'),
@@ -70,6 +88,7 @@ jobs:
               if not f.exists() or f.stat().st_size < 100:
                   raise RuntimeError(f'Missing or invalid asset: {f}')
           print('AGES assets verified:', {str(f): f.stat().st_size for f in required})
+          print('HQ dragon sha256:', digest)
 
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
