@@ -23,87 +23,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Pages
         uses: actions/configure-pages@v5
-
-      - name: Apply AGES Gaming production styling
-        shell: python
-        run: |
-          from pathlib import Path
-          import re
-
-          p = Path('index.html')
-          s = p.read_text(encoding='utf-8')
-
-          # Replace all embedded brand images with real repository assets.
-          embedded = list(dict.fromkeys(re.findall(r'data:image/webp;base64,[A-Za-z0-9+/=]+', s)))
-          if embedded:
-              s = s.replace(embedded[0], 'assets/logo.webp')
-          if len(embedded) > 1:
-              s = s.replace(embedded[1], 'assets/dragon.webp')
-
-          # Rubik font + themed scrollbars + safer logo sizing + product artwork.
-          if 'fonts.googleapis.com/css2?family=Rubik' not in s:
-              s = s.replace('</head>', '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"></head>')
-
-          s = s.replace('font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif', 'font-family:"Rubik",ui-sans-serif,system-ui,sans-serif')
-
-          extra_css = '''
-          html{scrollbar-color:#0d82d8 #020817;scrollbar-width:thin}
-          *{scrollbar-color:#0d82d8 #020817}
-          ::-webkit-scrollbar{width:12px;height:12px}
-          ::-webkit-scrollbar-track{background:linear-gradient(180deg,#020817,#05152d);border-left:1px solid rgba(67,179,239,.12)}
-          ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#43b3ef,#035cad 58%,#ff6a0a);border:3px solid #020817;border-radius:999px}
-          ::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#7fd3ff,#0878cf 55%,#ff9a18)}
-          ::-webkit-scrollbar-corner{background:#020817}
-          .brand img{width:clamp(3.15rem,4vw,4.35rem)!important;height:clamp(3.15rem,4vw,4.35rem)!important;object-fit:contain!important}
-          .hero-art img{max-width:min(94%,35rem)!important;max-height:35rem!important;object-fit:contain!important}
-          .about-dragon img,.about-art img{max-width:min(92%,31rem)!important;max-height:31rem!important;object-fit:contain!important}
-          .game .game-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:transform .45s ease}
-          .game:hover .game-image{transform:scale(1.035)}
-          .game.has-image .art,.game.has-image .symbol{display:none!important}
-          .game.has-image:after{inset:38% 0 0;background:linear-gradient(transparent,rgba(1,7,20,.16) 10%,rgba(1,7,20,.97) 76%)}
-          .products .game{min-height:clamp(22rem,28vw,30rem)}
-          @media(max-width:52rem){.brand img{width:3.45rem!important;height:3.45rem!important}}
-          '''
-          s = s.replace('</style>', extra_css + '</style>')
-
-          artwork = {
-              'Farm Blocks Battle': 'assets/products/farm-blocks.svg',
-              'World Fishing': 'assets/products/world-fishing.svg',
-              'Card Arena': 'assets/products/card-arena.svg',
-              'Arcade Rush': 'assets/products/arcade-rush.svg',
-              'Puzzle Worlds': 'assets/products/puzzle-worlds.svg',
-              'Adventure Tales': 'assets/products/adventure-tales.svg',
-              'Speed League': 'assets/products/speed-league.svg',
-          }
-          for title, src in artwork.items():
-              start = 0
-              while True:
-                  hit = s.find('>' + title + '</h3>', start)
-                  if hit < 0:
-                      break
-                  a = s.rfind('<article class="game', 0, hit)
-                  b = s.find('</article>', hit)
-                  if a < 0 or b < 0:
-                      break
-                  card = s[a:b+10]
-                  if 'game-image' not in card:
-                      card = card.replace('class="game"', 'class="game has-image"', 1)
-                      card = re.sub(r'<div class="art"></div><div class="symbol">.*?</div>', f'<img class="game-image" src="{src}" alt="{title} game artwork" loading="lazy">', card, count=1, flags=re.S)
-                      s = s[:a] + card + s[b+10:]
-                      start = a + len(card)
-                  else:
-                      start = b + 10
-
-          p.write_text(s, encoding='utf-8')
-
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
