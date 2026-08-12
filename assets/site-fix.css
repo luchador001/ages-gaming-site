@@ -2,7 +2,8 @@
 .brand img{width:clamp(3.05rem,3.8vw,4.15rem)!important;max-height:4.15rem!important;object-fit:contain!important}
 .hero-art img{width:min(100%,37rem)!important;max-height:37rem!important;object-fit:contain!important;image-rendering:auto!important}
 .about-dragon img{width:min(100%,32rem)!important;max-height:32rem!important;object-fit:contain!important;image-rendering:auto!important}
-.btn .icon{display:none!important}
+.btn .icon,.btn svg,.btn .arrow,.btn [class*="arrow"]{display:none!important}
+.btn::before,.btn::after{content:none!important;display:none!important}
 .game-card img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;transform:scale(1.16)!important;transition:transform .35s ease!important;image-rendering:auto!important}
 .game-card:hover img{transform:scale(1.21)!important}
 .products-grid .game-card{min-height:clamp(23rem,28vw,30rem)!important}
