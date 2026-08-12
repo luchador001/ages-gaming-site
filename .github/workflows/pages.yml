@@ -27,19 +27,49 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Inject stable site layer
+      - name: Build stable AGES Gaming page
         shell: python
         run: |
           from pathlib import Path
+          import re
+
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
-          css = '<link rel="stylesheet" href="assets/site-fix.css?v=4">\n<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-dragon.png?v=4">\n'
-          js = '<script src="assets/site-fix.js?v=4"></script>\n'
-          if 'assets/site-fix.css' not in s:
-              s = s.replace('</head>', css + '</head>')
-          if 'assets/site-fix.js' not in s:
-              s = s.replace('</body>', js + '</body>')
+
+          # Brand images must work even when JavaScript does not.
+          s = re.sub(r'<img\s+data-asset="logo"', '<img src="assets/logo.webp" data-asset="logo"', s)
+          s = re.sub(r'<img\s+data-asset="dragon"', '<img src="assets/dragon-hq.webp" data-asset="dragon"', s)
+
+          # Give every navigation control a real URL fallback.
+          def nav_button(match):
+              attrs1, target, attrs2, inner = match.groups()
+              return f'<a class="navlink"{attrs1} data-go="{target}"{attrs2} href="#{target}">{inner}</a>'
+          s = re.sub(r'<button class="navlink"([^>]*)\sdata-go="([^"]+)"([^>]*)>(.*?)</button>', nav_button, s, flags=re.S)
+
+          # Cache-busted stabilization layer and favicon.
+          css = '<link rel="stylesheet" href="assets/site-fix.css?v=6">\n<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-dragon.png?v=6">\n<link rel="shortcut icon" href="assets/favicon-dragon.png?v=6">\n'
+          js = '<script src="assets/site-fix.js?v=6"></script>\n'
+          s = re.sub(r'<link rel="stylesheet" href="assets/site-fix\.css[^>]*>\s*', '', s)
+          s = re.sub(r'<link rel="icon"[^>]*favicon-dragon\.png[^>]*>\s*', '', s)
+          s = re.sub(r'<link rel="shortcut icon"[^>]*>\s*', '', s)
+          s = re.sub(r'<script src="assets/site-fix\.js[^>]*></script>\s*', '', s)
+          s = s.replace('</head>', css + '</head>')
+          s = s.replace('</body>', js + '</body>')
+
           p.write_text(s, encoding='utf-8')
+
+          # Fail the build instead of publishing missing critical files.
+          required = [
+              Path('assets/logo.webp'),
+              Path('assets/dragon-hq.webp'),
+              Path('assets/favicon-dragon.png'),
+              Path('assets/site-fix.css'),
+              Path('assets/site-fix.js'),
+          ]
+          for f in required:
+              if not f.exists() or f.stat().st_size < 100:
+                  raise RuntimeError(f'Missing or invalid asset: {f}')
+          print('AGES assets verified:', {str(f): f.stat().st_size for f in required})
 
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
