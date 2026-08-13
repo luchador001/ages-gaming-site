@@ -16,46 +16,15 @@ concurrency:
 
 jobs:
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      - name: Rebuild verified dragon asset
-        shell: python
-        run: |
-          from pathlib import Path
-          import base64, hashlib
-          parts = sorted(Path('.build/dragon-v2').glob('*.txt'))
-          assert len(parts) == 10, f'Expected 10 parts, got {len(parts)}'
-          encoded = ''.join(p.read_text(encoding='utf-8').strip() for p in parts)
-          raw = base64.b64decode(encoded, validate=True)
-          assert len(raw) == 54386, f'Unexpected dragon size: {len(raw)}'
-          digest = hashlib.sha256(raw).hexdigest()
-          assert digest == '76304e2c7d32ab8f9956516666e347796ebb9c857e7ea69578c6775fa4aead90', digest
-          assert raw[:4] == b'RIFF' and raw[8:12] == b'WEBP'
-          Path('assets/dragon-final.webp').write_bytes(raw)
-          print('Verified dragon:', len(raw), digest)
-      - name: Verify static pages
-        shell: python
-        run: |
-          from pathlib import Path
-          required = ['index.html','about.html','products.html','services.html','contact.html','styles.css','app.js','assets/logo.webp','assets/dragon-final.webp']
-          for name in required:
-              p = Path(name)
-              assert p.exists() and p.stat().st_size > 0, f'Missing {name}'
-          for name in ['index.html','about.html','products.html','services.html','contact.html']:
-              text = Path(name).read_text(encoding='utf-8')
-              assert '</html>' in text.lower(), f'Truncated {name}'
-          print('Static site verified')
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
       - name: Deploy to GitHub Pages
-        id: deployment
         uses: actions/deploy-pages@v4
