@@ -11,9 +11,13 @@
   padding: 1.8rem 3.6rem 0.8rem;
 
   &__logo {
-    height: 6.4rem;
+    height: 8.4rem;
+    object-fit: contain;
     width: auto;
     filter: drop-shadow(var(--shadow-logo));
+    @media screen and (max-width: 767px) {
+      height: 6.4rem;
+    }
   }
 
   &__nav {
