@@ -1,0 +1,33 @@
+@use 'breakpoints' as bp;
+
+:host {
+  display: block;
+}
+
+.shell {
+  position: relative;
+  height: 100dvh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-family-base);
+  color: var(--color-ink);
+  overflow: hidden;
+
+  // Mobile keeps the natural page scroll instead of shrinking everything to
+  // fit one screen — there's real content here (hero + full contact form)
+  // and forcing it into one no-scroll viewport makes text/tap targets too
+  // small on small screens. Tablet and web still fit within one screen.
+  @include bp.mobile {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+
+  // Host elements are transparent to layout so the header/main rendered
+  // inside app-header / app-hero act as the real flex items of the shell.
+  app-header,
+  app-hero {
+    display: contents;
+  }
+}

@@ -1,0 +1,71 @@
+<form id="contact" class="contact-card" [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+  <h2 class="contact-card__title">Contact Us</h2>
+  <p class="contact-card__subtitle">We'd love to hear from you.</p>
+
+  <label class="contact-card__field">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5b6b86" stroke-width="2" stroke-linecap="round">
+      <circle cx="12" cy="8" r="3.6"></circle>
+      <path d="M4.5 20a7.5 7.5 0 0 1 15 0"></path>
+    </svg>
+    <input class="contact-card__input" type="text" placeholder="Your Name" formControlName="name" />
+  </label>
+
+  <label class="contact-card__field">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5b6b86" stroke-width="2" stroke-linecap="round">
+      <rect x="2.5" y="5" width="19" height="14" rx="3"></rect>
+      <path d="M3 7l9 6 9-6"></path>
+    </svg>
+    <input class="contact-card__input" type="email" placeholder="Email Address" formControlName="email" />
+  </label>
+
+  <label class="contact-card__field">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5b6b86" stroke-width="2" stroke-linecap="round">
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path>
+      <path d="M14 3v5h5M9 13h6M9 16.5h4"></path>
+    </svg>
+    <input class="contact-card__input" type="text" placeholder="Subject" formControlName="subject" />
+  </label>
+
+  <div class="contact-card__field contact-card__field--textarea">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5b6b86" stroke-width="2" stroke-linecap="round" class="contact-card__field-icon">
+      <path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"></path>
+    </svg>
+    <textarea class="contact-card__textarea" placeholder="Message" rows="4" formControlName="message"></textarea>
+  </div>
+
+  <button type="submit" class="contact-card__submit">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 2 11 13"></path>
+      <path d="M22 2 15 22l-4-9-9-4z"></path>
+    </svg>
+    Send Message
+  </button>
+
+  <div class="contact-card__info-row">
+    <div class="contact-card__info-tile">
+      <span class="contact-card__info-icon">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <rect x="2.5" y="5" width="19" height="14" rx="3"></rect>
+          <path d="M3 7l9 6 9-6"></path>
+        </svg>
+      </span>
+      <span class="contact-card__info-text">
+        <span class="contact-card__info-label">hello&#64;agesgaming.com</span>
+        <span class="contact-card__info-sub">We reply within 24h</span>
+      </span>
+    </div>
+    <div class="contact-card__info-tile">
+      <span class="contact-card__info-icon">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M4 15v-3a8 8 0 0 1 16 0v3"></path>
+          <rect x="2.5" y="14" width="4" height="6" rx="2"></rect>
+          <rect x="17.5" y="14" width="4" height="6" rx="2"></rect>
+        </svg>
+      </span>
+      <span class="contact-card__info-text">
+        <span class="contact-card__info-label">+1 (888) 123-4567</span>
+        <span class="contact-card__info-sub">Mon – Fri, 9AM – 6PM (PT)</span>
+      </span>
+    </div>
+  </div>
+</form>

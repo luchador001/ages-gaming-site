@@ -1,0 +1,74 @@
+<header class="site-header">
+  <img class="site-header__logo" src="media/logo_text.png" alt="AGES Gaming" />
+
+  <nav class="site-header__nav">
+    <a class="site-header__link site-header__link--active" href="#home">Home</a>
+    @for (link of navLinks; track link.href) {
+      <a class="site-header__link" [href]="link.href">{{ link.label }}</a>
+    }
+  </nav>
+
+  <div class="site-header__actions">
+    <button
+      type="button"
+      class="site-header__theme-toggle"
+      aria-label="Toggle theme"
+      [attr.aria-pressed]="theme.mode() === 'dark'"
+      (click)="toggleTheme()"
+    >
+      @if (theme.mode() === 'dark') {
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
+        </svg>
+      } @else {
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"></path>
+        </svg>
+      }
+    </button>
+
+    <a class="site-header__cta" href="#contact">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 2 11 13"></path>
+        <path d="M22 2 15 22l-4-9-9-4z"></path>
+      </svg>
+      Contact Us
+    </a>
+
+    <button
+      type="button"
+      class="site-header__burger"
+      [class.site-header__burger--open]="isMenuOpen()"
+      aria-label="Open menu"
+      aria-controls="site-menu"
+      [attr.aria-expanded]="isMenuOpen()"
+      (click)="toggleMenu()"
+    >
+      <span class="site-header__burger-line"></span>
+      <span class="site-header__burger-line"></span>
+      <span class="site-header__burger-line"></span>
+    </button>
+  </div>
+
+  <div
+    class="site-header__backdrop"
+    [class.site-header__backdrop--open]="isMenuOpen()"
+    (click)="closeMenu()"
+    aria-hidden="true"
+  ></div>
+
+  <nav id="site-menu" class="site-header__menu" [class.site-header__menu--open]="isMenuOpen()">
+    <a class="site-header__menu-link site-header__menu-link--active" href="#home" (click)="closeMenu()">Home</a>
+    @for (link of navLinks; track link.href) {
+      <a class="site-header__menu-link" [href]="link.href" (click)="closeMenu()">{{ link.label }}</a>
+    }
+    <a class="site-header__menu-cta" href="#contact" (click)="closeMenu()">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 2 11 13"></path>
+        <path d="M22 2 15 22l-4-9-9-4z"></path>
+      </svg>
+      Contact Us
+    </a>
+  </nav>
+</header>

@@ -1,0 +1,230 @@
+@use 'breakpoints' as bp;
+
+.site-header {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.6rem;
+  padding: 1.8rem 3.6rem 0.8rem;
+
+  &__logo {
+    height: 6.4rem;
+    width: auto;
+    filter: drop-shadow(var(--shadow-logo));
+  }
+
+  &__nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 2.4rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+
+    @include bp.burger-nav {
+      display: none;
+    }
+  }
+
+  &__link {
+    color: var(--color-ink-soft);
+    padding-bottom: 0.7rem;
+    border-bottom: 0.3rem solid transparent;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--color-primary);
+    }
+
+    &--active {
+      color: var(--color-primary);
+      font-weight: 600;
+      border-bottom-color: var(--color-primary);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+  }
+
+  &__theme-toggle {
+    width: 4rem;
+    height: 4rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-glass-border);
+    background: var(--color-glass-medium);
+    color: var(--color-primary);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-primary-md);
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background: var(--color-white);
+    }
+  }
+
+  &__cta {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 1.1rem 2rem;
+    border-radius: var(--radius-pill);
+    background: var(--gradient-primary);
+    color: var(--color-white);
+    font-weight: 600;
+    font-size: 1.5rem;
+    box-shadow: var(--shadow-blue-btn);
+    transition: filter 0.2s ease;
+
+    &:hover {
+      color: var(--color-white);
+      filter: brightness(1.06);
+    }
+
+    @include bp.burger-nav {
+      display: none;
+    }
+  }
+
+  // ---- Burger toggle ------------------------------------------------------
+  &__burger {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 4rem;
+    height: 4rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-glass-border);
+    background: var(--color-glass-medium);
+    cursor: pointer;
+    box-shadow: var(--shadow-primary-md);
+
+    @include bp.burger-nav {
+      display: flex;
+    }
+  }
+
+  &__burger-line {
+    width: 2rem;
+    height: 0.22rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-ink-soft);
+    transition: transform 0.25s ease, opacity 0.25s ease;
+  }
+
+  &__burger--open &__burger-line {
+    &:nth-child(1) {
+      transform: translateY(0.72rem) rotate(45deg);
+    }
+
+    &:nth-child(2) {
+      opacity: 0;
+    }
+
+    &:nth-child(3) {
+      transform: translateY(-0.72rem) rotate(-45deg);
+    }
+  }
+
+  // ---- Dropdown menu + backdrop -------------------------------------------
+  &__backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 3;
+    background: rgba(4, 8, 18, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+
+    @include bp.burger-nav {
+      display: block;
+    }
+
+    &--open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  &__menu {
+    display: none;
+    position: absolute;
+    z-index: 4;
+    top: calc(100% - 0.6rem);
+    left: 1.6rem;
+    right: 1.6rem;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1.4rem;
+    border-radius: var(--radius-md);
+    background: var(--color-glass-strong);
+    border: 1px solid var(--color-glass-border);
+    backdrop-filter: blur(1.8rem);
+    -webkit-backdrop-filter: blur(1.8rem);
+    box-shadow: var(--shadow-primary-card);
+    opacity: 0;
+    transform: translateY(-0.8rem);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+
+    @include bp.burger-nav {
+      display: flex;
+    }
+
+    &--open {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+  }
+
+  &__menu-link {
+    padding: 1.1rem 1.2rem;
+    border-radius: var(--radius-md);
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: var(--color-ink-soft);
+    transition: background-color 0.2s ease, color 0.2s ease;
+
+    &:hover {
+      background: var(--color-glass-soft);
+      color: var(--color-primary);
+    }
+
+    &--active {
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+  }
+
+  &__menu-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+    margin-top: 0.4rem;
+    padding: 1.2rem 2rem;
+    border-radius: var(--radius-pill);
+    background: var(--gradient-primary);
+    color: var(--color-white);
+    font-weight: 600;
+    font-size: 1.6rem;
+    box-shadow: var(--shadow-blue-btn);
+
+    &:hover {
+      color: var(--color-white);
+    }
+  }
+}

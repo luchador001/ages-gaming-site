@@ -1,0 +1,43 @@
+// Breakpoint tokens used to switch the root rem base and to adjust layout.
+// web (desktop)  >= 1101px  -> 1rem = 10px (fixed)
+// tablet         769px-1100px -> 1rem = 1.6667vmin
+// mobile         <= 768px   -> 1rem = 2.6667vmin
+$tablet-max: 1100px;
+$mobile-max: 768px;
+
+@mixin tablet {
+  @media (max-width: $tablet-max) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: $mobile-max) {
+    @content;
+  }
+}
+
+@mixin desktop-only {
+  @media (min-width: #{$tablet-max + 1px}) {
+    @content;
+  }
+}
+
+// The hero only stacks into a single column on narrow *portrait* viewports.
+// In landscape (short-but-wide phones/windows) the side-by-side row needs
+// far less vertical space than a stacked column would, so it stays row-based
+// even below $tablet-max — that keeps everything fitting without a scroll.
+@mixin stacked-hero {
+  @media (max-width: $tablet-max) and (orientation: portrait) {
+    @content;
+  }
+}
+
+// Burger navigation replaces the full nav on mobile (any orientation) and
+// on tablet *only* in portrait — tablet landscape has enough width for the
+// regular inline nav.
+@mixin burger-nav {
+  @media (max-width: $mobile-max), (max-width: $tablet-max) and (orientation: portrait) {
+    @content;
+  }
+}

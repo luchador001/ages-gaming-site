@@ -1,0 +1,187 @@
+@use 'breakpoints' as bp;
+
+// ---------------------------------------------------------------------------
+// Root font-size scaling — 1rem = 10px (web) / 1.6667vmin (tablet) / 2.6667vmin (mobile)
+// All component sizing is authored in rem so it scales fluidly per device class.
+// ---------------------------------------------------------------------------
+html {
+  font-size: 10px;
+}
+
+@include bp.tablet {
+  html {
+    font-size: 1.2vmin;
+  }
+}
+
+@include bp.mobile {
+  html {
+    font-size: 2.17vmin;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// CSS3 custom properties — design tokens
+// ---------------------------------------------------------------------------
+:root {
+  --font-family-base: 'Figtree', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  --color-bg-fallback: #cfe8ff;
+  --color-ink: #0f172a;
+  --color-ink-soft: #1c2b45;
+  --color-text-body: #223;
+  --color-text-muted: #2b3a54;
+  --color-text-subtle: #3d4c66;
+  --color-placeholder: #5b6b86;
+
+  --color-primary: #0078ff;
+  --color-primary-dark: #123cab;
+  --color-primary-deep: #0067f5;
+
+  --color-white: #ffffff;
+  --color-glass-strong: rgba(255, 255, 255, 0.82);
+  --color-glass-medium: rgba(255, 255, 255, 0.72);
+  --color-glass-soft: rgba(255, 255, 255, 0.62);
+  --color-glass-faint: rgba(255, 255, 255, 0.52);
+  --color-glass-border: rgba(255, 255, 255, 0.85);
+  --color-glass-border-soft: rgba(255, 255, 255, 0.8);
+
+  --gradient-primary: linear-gradient(180deg, #2b8bff 0%, #0067f5 100%);
+  --gradient-primary-deep: linear-gradient(180deg, #2b8bff, #0059dd);
+  --gradient-badge: linear-gradient(160deg, #ffc83d, #ff7a1f);
+  --gradient-orange: linear-gradient(180deg, #ffa53d, #ff7a1f);
+  --gradient-green: linear-gradient(180deg, #8ed44f, #5faf2c);
+
+  --shadow-primary-sm: 0 6px 16px rgba(18, 60, 171, 0.12);
+  --shadow-primary-md: 0 8px 20px rgba(18, 60, 171, 0.14);
+  --shadow-primary-lg: 0 12px 24px rgba(18, 60, 171, 0.18);
+  --shadow-primary-card: 0 24px 60px rgba(18, 60, 171, 0.22);
+  --shadow-blue-btn: 0 10px 22px rgba(0, 103, 245, 0.35);
+  --shadow-blue-btn-lg: 0 12px 24px rgba(0, 103, 245, 0.34);
+  --shadow-blue-btn-solid: 0 14px 28px rgba(0, 89, 221, 0.36);
+  --shadow-orange-btn: 0 12px 24px rgba(255, 122, 31, 0.34);
+  --shadow-green-btn: 0 12px 24px rgba(95, 175, 44, 0.32);
+  --shadow-logo: 0 6px 14px rgba(18, 60, 171, 0.28);
+
+  --radius-pill: 999px;
+  --radius-lg: 3rem;
+  --radius-md: 1.4rem;
+
+  --overlay-gradient-1: linear-gradient(
+    100deg,
+    rgba(230, 244, 255, 0.55) 0%,
+    rgba(230, 244, 255, 0.22) 45%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  --overlay-gradient-2: radial-gradient(
+    58% 62% at 44% 55%,
+    rgba(255, 255, 255, 0.68) 0%,
+    rgba(255, 255, 255, 0.42) 42%,
+    rgba(255, 255, 255, 0.16) 68%,
+    rgba(255, 255, 255, 0) 88%
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Dark theme — same token names, dark values. Toggled by ThemeService adding
+// "theme-dark" to <html>. Every color in the app is read through one of
+// these custom properties, so this block is the entire dark mode.
+// ---------------------------------------------------------------------------
+:root.theme-dark {
+  --color-bg-fallback: #0a1220;
+  --color-ink: #f3f6fc;
+  --color-ink-soft: #dbe4f3;
+  --color-text-body: #cad3e6;
+  --color-text-muted: #aeb9d1;
+  --color-text-subtle: #8b98b5;
+  --color-placeholder: #7683a0;
+
+  --color-white: #ffffff;
+  --color-glass-strong: rgba(13, 20, 36, 0.72);
+  --color-glass-medium: rgba(13, 20, 36, 0.6);
+  --color-glass-soft: rgba(13, 20, 36, 0.55);
+  --color-glass-faint: rgba(13, 20, 36, 0.45);
+  --color-glass-border: rgba(255, 255, 255, 0.14);
+  --color-glass-border-soft: rgba(255, 255, 255, 0.1);
+
+  --shadow-primary-sm: 0 6px 16px rgba(0, 0, 0, 0.35);
+  --shadow-primary-md: 0 8px 20px rgba(0, 0, 0, 0.4);
+  --shadow-primary-lg: 0 12px 24px rgba(0, 0, 0, 0.45);
+  --shadow-primary-card: 0 24px 60px rgba(0, 0, 0, 0.55);
+  --shadow-logo: 0 6px 14px rgba(0, 0, 0, 0.5);
+
+  --overlay-gradient-1: linear-gradient(
+    100deg,
+    rgba(4, 8, 18, 0.78) 0%,
+    rgba(4, 8, 18, 0.55) 45%,
+    rgba(4, 8, 18, 0.28) 100%
+  );
+  --overlay-gradient-2: radial-gradient(
+    58% 62% at 44% 55%,
+    rgba(4, 8, 18, 0.6) 0%,
+    rgba(4, 8, 18, 0.42) 42%,
+    rgba(4, 8, 18, 0.2) 68%,
+    rgba(4, 8, 18, 0) 88%
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Reset
+// ---------------------------------------------------------------------------
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg-fallback);
+  height: 100%;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  font-family: var(--font-family-base);
+  color: var(--color-ink);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+// Smooth, low-cost fade for the light/dark toggle across every themed surface.
+*,
+*::before,
+*::after {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--color-primary-dark);
+  }
+}
+
+input,
+textarea,
+button {
+  font-family: inherit;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-placeholder);
+  opacity: 1;
+}
+
+@keyframes agesFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1.6rem);
+  }
+}

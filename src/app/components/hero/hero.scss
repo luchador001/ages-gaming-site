@@ -1,0 +1,38 @@
+@use 'breakpoints' as bp;
+
+.hero {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 160rem;
+  margin: 0 auto;
+  gap: 3.2rem;
+  padding: 1.8rem 3.6rem 3.2rem;
+
+  // Host elements are transparent to layout so the sections rendered inside
+  // app-hero-content / app-contact-card act as the real flex items here.
+  app-hero-content,
+  app-contact-card {
+    display: contents;
+  }
+
+  @include bp.stacked-hero {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+
+  &__spacer {
+    flex: 0 1 34rem;
+
+    @include bp.stacked-hero {
+      display: none;
+    }
+  }
+}
