@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { ThemeService } from '../../services/theme';
+import { SoundService } from '../../services/sound';
 
 interface NavLink {
   label: string;
@@ -14,6 +15,7 @@ interface NavLink {
 })
 export class Header {
   protected readonly theme = inject(ThemeService);
+  protected readonly sound = inject(SoundService);
 
   protected readonly navLinks: NavLink[] = [
     { label: 'Games', href: '#games' },
@@ -25,6 +27,10 @@ export class Header {
 
   protected toggleTheme(): void {
     this.theme.toggle();
+  }
+
+  protected toggleSound(): void {
+    this.sound.toggle();
   }
 
   protected toggleMenu(): void {
