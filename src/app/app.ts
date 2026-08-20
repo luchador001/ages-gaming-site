@@ -2,12 +2,13 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, inject } fr
 import { VideoBackground } from './components/video-background/video-background';
 import { Header } from './components/header/header';
 import { Hero } from './components/hero/hero';
+import { SiteModal } from './components/site-modal/site-modal';
 import { ViewportService } from './services/viewport';
 import { ThemeService } from './services/theme';
 
 @Component({
   selector: 'app-root',
-  imports: [VideoBackground, Header, Hero],
+  imports: [VideoBackground, Header, Hero, SiteModal],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

@@ -1,5 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { LanguageService } from '../../services/language';
+import { translations } from '../../i18n/translations';
 
 @Component({
   selector: 'app-contact-card',
@@ -9,6 +11,9 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 })
 export class ContactCard {
   private readonly formBuilder = inject(FormBuilder);
+  private readonly language = inject(LanguageService);
+
+  protected readonly t = computed(() => translations[this.language.lang()]);
 
   protected readonly contactForm = this.formBuilder.group({
     name: ['', Validators.required],

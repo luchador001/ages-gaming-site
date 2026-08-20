@@ -1,0 +1,30 @@
+@if (modal.active(); as active) {
+  <div class="site-modal">
+    <div class="site-modal__backdrop" (click)="modal.close()"></div>
+
+    <div class="site-modal__panel" role="dialog" aria-modal="true" [attr.aria-label]="active === 'about' ? t().modal.about.title : t().modal.terms.title">
+      <button type="button" class="site-modal__close" [attr.aria-label]="t().modal.close" (click)="modal.close()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6 6 18"></path>
+          <path d="m6 6 12 12"></path>
+        </svg>
+      </button>
+
+      <div class="site-modal__body">
+        @if (active === 'about') {
+          <h2 class="site-modal__title">{{ t().modal.about.title }}</h2>
+          @for (paragraph of t().modal.about.paragraphs; track paragraph) {
+            <p class="site-modal__paragraph">{{ paragraph }}</p>
+          }
+        } @else if (active === 'terms') {
+          <h2 class="site-modal__title">{{ t().modal.terms.title }}</h2>
+          <p class="site-modal__updated">{{ t().modal.terms.updated }}</p>
+          @for (section of t().modal.terms.sections; track section.heading) {
+            <h3 class="site-modal__section-heading">{{ section.heading }}</h3>
+            <p class="site-modal__paragraph">{{ section.body }}</p>
+          }
+        }
+      </div>
+    </div>
+  </div>
+}
