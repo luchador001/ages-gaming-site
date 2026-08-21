@@ -1,6 +1,6 @@
-<div class="shell" #shell>
+<div class="shell" [class.shell--scroll]="!isHomeRoute()" #shell>
   <app-video-background></app-video-background>
   <app-header></app-header>
-  <app-hero></app-hero>
+  <router-outlet></router-outlet>
 </div>
 <app-site-modal></app-site-modal>

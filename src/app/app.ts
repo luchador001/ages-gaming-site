@@ -1,14 +1,15 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, inject, signal } from '@angular/core';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { VideoBackground } from './components/video-background/video-background';
 import { Header } from './components/header/header';
-import { Hero } from './components/hero/hero';
 import { SiteModal } from './components/site-modal/site-modal';
 import { ViewportService } from './services/viewport';
 import { ThemeService } from './services/theme';
 
 @Component({
   selector: 'app-root',
-  imports: [VideoBackground, Header, Hero, SiteModal],
+  imports: [VideoBackground, Header, RouterOutlet, SiteModal],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -19,12 +20,27 @@ export class App implements AfterViewInit, OnDestroy {
   // classes and the theme class both exist on <html> from the very first paint.
   private readonly viewport = inject(ViewportService);
   private readonly theme = inject(ThemeService);
+  private readonly router = inject(Router);
+
+  // The fit-to-viewport behavior below is authored for the single-screen home
+  // route (header + hero). Any other route (e.g. /games) is a normal, taller
+  // page that should scroll like the rest of the web — this flag lets the
+  // template opt that route out of the shell's overflow:hidden/100dvh sizing.
+  protected readonly isHomeRoute = signal(this.router.url === '/' || this.router.url === '');
 
   private frameId: number | null = null;
   private resizeObserver: ResizeObserver | null = null;
+  private routerSubscription: Subscription | null = null;
   private readonly onResize = () => this.scheduleFit();
 
   ngAfterViewInit(): void {
+    this.routerSubscription = this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.isHomeRoute.set(event.urlAfterRedirects === '/' || event.urlAfterRedirects === '');
+        this.scheduleFit();
+      }
+    });
+
     this.scheduleFit();
 
     // ResizeObserver on the shell catches every real viewport-driven size
@@ -47,6 +63,7 @@ export class App implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     window.removeEventListener('resize', this.onResize);
     this.resizeObserver?.disconnect();
+    this.routerSubscription?.unsubscribe();
     if (this.frameId !== null) {
       cancelAnimationFrame(this.frameId);
     }

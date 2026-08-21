@@ -53,6 +53,45 @@ export interface Translations {
       tooFast: string;
     };
   };
+  gamesPage: {
+    eyebrow: string;
+    titlePrefix: string;
+    titleAccent: string;
+    titleSuffix: string;
+    subtitle: string;
+    filters: {
+      all: string;
+      puzzle: string;
+      adventure: string;
+      idle: string;
+      coop: string;
+    };
+    featuredBadge: string;
+    featured: {
+      title: string;
+      description: string;
+      tags: string[];
+      rating: string;
+      playNow: string;
+      details: string;
+    };
+    playLabel: string;
+    comingSoonBadge: string;
+    wishlistLabel: string;
+    ctaTitle: string;
+    ctaSubtitle: string;
+    ctaPartner: string;
+    backHome: string;
+    cards: {
+      id: string;
+      category: 'puzzle' | 'adventure' | 'idle' | 'coop';
+      title: string;
+      description: string;
+      rating?: string;
+      note?: string;
+      comingSoon?: boolean;
+    }[];
+  };
   modal: {
     close: string;
     about: {
@@ -122,6 +161,87 @@ export const translations: Record<'en' | 'ru', Translations> = {
         error: 'Something went wrong. Please try again later or email us directly.',
         tooFast: 'Please take a moment before sending — try again in a couple of seconds.',
       },
+    },
+    gamesPage: {
+      eyebrow: 'OUR GAMES LIBRARY',
+      titlePrefix: 'Games We',
+      titleAccent: 'Build',
+      titleSuffix: '& Love',
+      subtitle: 'Casual, cozy, and endlessly replayable. Every title below is crafted in-house by the AGES Gaming studio.',
+      filters: {
+        all: 'All Games',
+        puzzle: 'Puzzle',
+        adventure: 'Adventure',
+        idle: 'Idle',
+        coop: 'Co-op',
+      },
+      featuredBadge: 'FEATURED RELEASE',
+      featured: {
+        title: 'Dragon Isles: Cozy Skies',
+        description:
+          'Build your floating island, hatch dragon companions, and trade with sky villages. A relaxing builder with a new event season every month.',
+        tags: ['Builder', 'Cozy', 'Single player'],
+        rating: '4.8',
+        playNow: 'Play Now',
+        details: 'Game Details',
+      },
+      playLabel: 'Play',
+      comingSoonBadge: 'COMING SOON',
+      wishlistLabel: 'Wishlist',
+      ctaTitle: 'Want your game on this shelf?',
+      ctaSubtitle: 'We co-develop and publish casual titles with indie teams worldwide.',
+      ctaPartner: 'Partner With Us',
+      backHome: 'Back Home',
+      cards: [
+        {
+          id: 'bubble-bloom',
+          category: 'puzzle',
+          title: 'Bubble Bloom',
+          description: 'Match blossoms, grow your garden, and unlock 500+ hand-made levels.',
+          note: 'Spring 2026',
+          comingSoon: true,
+        },
+        {
+          id: 'sky-trail-runners',
+          category: 'adventure',
+          title: 'Sky Trail Runners',
+          description: 'Dash across floating islands, dodge storms, and rescue lost dragon eggs.',
+          note: 'Summer 2026',
+          comingSoon: true,
+        },
+        {
+          id: 'tiny-tavern-tycoon',
+          category: 'idle',
+          title: 'Tiny Tavern Tycoon',
+          description: 'Serve adventurers, upgrade your kitchen, and let profits brew offline.',
+          note: 'Fall 2026',
+          comingSoon: true,
+        },
+        {
+          id: 'cloud-kitchen-crew',
+          category: 'coop',
+          title: 'Cloud Kitchen Crew',
+          description: 'Four-player cooking chaos above the clouds. Cross-play on every device.',
+          note: 'Winter 2026',
+          comingSoon: true,
+        },
+        {
+          id: 'rune-and-ribbon',
+          category: 'puzzle',
+          title: 'Rune & Ribbon',
+          description: 'Draw runes to solve gentle logic puzzles with a lo-fi soundtrack.',
+          note: 'Spring 2026',
+          comingSoon: true,
+        },
+        {
+          id: 'dragon-isles-2',
+          category: 'adventure',
+          title: 'Dragon Isles 2',
+          description: 'Bigger skies, co-op islands, and dragon breeding. Wishlist it today.',
+          note: 'Winter 2026',
+          comingSoon: true,
+        },
+      ],
     },
     modal: {
       close: 'Close',
@@ -224,6 +344,87 @@ export const translations: Record<'en' | 'ru', Translations> = {
         error: 'Что-то пошло не так. Попробуйте позже или напишите нам напрямую.',
         tooFast: 'Пожалуйста, не торопитесь — повторите отправку через пару секунд.',
       },
+    },
+    gamesPage: {
+      eyebrow: 'НАША БИБЛИОТЕКА ИГР',
+      titlePrefix: 'Игры, которые мы',
+      titleAccent: 'создаём',
+      titleSuffix: 'и любим',
+      subtitle: 'Казуальные, уютные и по-настоящему увлекательные. Каждая игра ниже создана студией AGES Gaming.',
+      filters: {
+        all: 'Все игры',
+        puzzle: 'Головоломки',
+        adventure: 'Приключения',
+        idle: 'Idle',
+        coop: 'Кооператив',
+      },
+      featuredBadge: 'НОВИНКА',
+      featured: {
+        title: 'Dragon Isles: Cozy Skies',
+        description:
+          'Стройте свой парящий остров, выращивайте драконов-компаньонов и торгуйте с небесными деревнями. Уютный симулятор строительства с новым сезоном каждый месяц.',
+        tags: ['Строительство', 'Уют', 'Одиночная игра'],
+        rating: '4.8',
+        playNow: 'Играть',
+        details: 'О игре',
+      },
+      playLabel: 'Играть',
+      comingSoonBadge: 'СКОРО',
+      wishlistLabel: 'В избранное',
+      ctaTitle: 'Хотите, чтобы ваша игра была здесь?',
+      ctaSubtitle: 'Мы совместно разрабатываем и издаём казуальные игры с инди-командами по всему миру.',
+      ctaPartner: 'Стать партнёром',
+      backHome: 'На главную',
+      cards: [
+        {
+          id: 'bubble-bloom',
+          category: 'puzzle',
+          title: 'Bubble Bloom',
+          description: 'Собирайте цветы, выращивайте сад и открывайте более 500 уровней ручной работы.',
+          note: 'Весна 2026',
+          comingSoon: true,
+        },
+        {
+          id: 'sky-trail-runners',
+          category: 'adventure',
+          title: 'Sky Trail Runners',
+          description: 'Бегите по парящим островам, уклоняйтесь от бурь и спасайте яйца драконов.',
+          note: 'Лето 2026',
+          comingSoon: true,
+        },
+        {
+          id: 'tiny-tavern-tycoon',
+          category: 'idle',
+          title: 'Tiny Tavern Tycoon',
+          description: 'Обслуживайте искателей приключений, улучшайте кухню и получайте доход офлайн.',
+          note: 'Осень 2026',
+          comingSoon: true,
+        },
+        {
+          id: 'cloud-kitchen-crew',
+          category: 'coop',
+          title: 'Cloud Kitchen Crew',
+          description: 'Кулинарный хаос на четверых высоко над облаками. Кросс-плей на любых устройствах.',
+          note: 'Зима 2026',
+          comingSoon: true,
+        },
+        {
+          id: 'rune-and-ribbon',
+          category: 'puzzle',
+          title: 'Rune & Ribbon',
+          description: 'Рисуйте руны, решайте уютные логические головоломки под lo-fi музыку.',
+          note: 'Весна 2026',
+          comingSoon: true,
+        },
+        {
+          id: 'dragon-isles-2',
+          category: 'adventure',
+          title: 'Dragon Isles 2',
+          description: 'Больше неба, совместные острова и разведение драконов. Добавьте в избранное уже сейчас.',
+          note: 'Зима 2026',
+          comingSoon: true,
+        },
+      ],
     },
     modal: {
       close: 'Закрыть',

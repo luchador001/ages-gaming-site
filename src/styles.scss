@@ -201,29 +201,43 @@ button {
 // ---------------------------------------------------------------------------
 // Scrollbars — thin and on-brand instead of the bulky OS default, wherever
 // content scrolls (modal body, textarea, any future overflow area).
+//
+// `scrollbar-width`/`scrollbar-color` is the Firefox mechanism, scoped to
+// Firefox only (`::-webkit-scrollbar` isn't a valid selector there, so this
+// feature-detects it away from Chromium/WebKit) — those engines get pixel
+// control from `::-webkit-scrollbar` below instead, with no need to fight
+// the standard property for priority.
 // ---------------------------------------------------------------------------
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-primary) transparent;
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary) transparent;
+  }
 }
 
-*::-webkit-scrollbar {
-  width: 0.6rem;
-  height: 0.6rem;
+// Chrome/Edge/Safari — tuned to an exact 4px, scoped to the web tier only,
+// since tablet/mobile don't get mouse-driven scrollbar interaction worth
+// the visual real estate. The root/viewport scrollbar needs `html` targeted
+// directly — `*` alone doesn't reliably reach it once body's
+// overflow-x:hidden puts the browser into the legacy "propagate to
+// viewport" quirk (see body rule above).
+html.is-web::-webkit-scrollbar,
+html.is-web *::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
 }
 
-*::-webkit-scrollbar-track {
+html.is-web *::-webkit-scrollbar-track {
   background: transparent;
 }
 
-*::-webkit-scrollbar-thumb {
+html.is-web *::-webkit-scrollbar-thumb {
   background-color: var(--color-primary);
   border-radius: var(--radius-pill);
-  border: 0.15rem solid transparent;
   background-clip: padding-box;
 }
 
-*::-webkit-scrollbar-thumb:hover {
+html.is-web *::-webkit-scrollbar-thumb:hover {
   background-color: var(--color-primary-dark);
   background-clip: padding-box;
 }

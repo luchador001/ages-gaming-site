@@ -1,0 +1,131 @@
+<main id="games" class="games-page">
+  <section class="games-page__intro">
+    <div class="games-page__intro-copy">
+      <div class="games-page__eyebrow">
+        <span class="games-page__eyebrow-icon">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 3l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.4l6.1-.8z"></path>
+          </svg>
+        </span>
+        {{ t().gamesPage.eyebrow }}
+      </div>
+      <h1 class="games-page__title">
+        {{ t().gamesPage.titlePrefix }} <span class="games-page__title-accent">{{ t().gamesPage.titleAccent }}</span> {{ t().gamesPage.titleSuffix }}
+      </h1>
+      <p class="games-page__subtitle">{{ t().gamesPage.subtitle }}</p>
+    </div>
+
+    <div class="games-page__filters">
+      @for (option of filterOptions(); track option.key) {
+        <button
+          type="button"
+          class="games-page__filter"
+          [class.games-page__filter--active]="activeFilter() === option.key"
+          (click)="setFilter(option.key)"
+        >
+          {{ option.label }}
+        </button>
+      }
+    </div>
+  </section>
+
+  <section class="games-page__featured">
+    <div class="games-page__featured-art">
+      <img [src]="featuredImage" [alt]="t().gamesPage.featured.title" loading="lazy" />
+    </div>
+    <div class="games-page__featured-body">
+      <span class="games-page__featured-badge">{{ t().gamesPage.featuredBadge }}</span>
+      <h2 class="games-page__featured-title">{{ t().gamesPage.featured.title }}</h2>
+      <p class="games-page__featured-description">{{ t().gamesPage.featured.description }}</p>
+      <div class="games-page__featured-tags">
+        @for (tag of t().gamesPage.featured.tags; track tag) {
+          <span class="games-page__tag">{{ tag }}</span>
+        }
+        <span class="games-page__tag games-page__tag--rating">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 3l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.4l6.1-.8z"></path>
+          </svg>
+          {{ t().gamesPage.featured.rating }}
+        </span>
+      </div>
+      <div class="games-page__featured-actions">
+        <button type="button" class="games-page__action games-page__action--primary">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M7 4.5l12 7.5-12 7.5z"></path>
+          </svg>
+          {{ t().gamesPage.featured.playNow }}
+        </button>
+        <button type="button" class="games-page__action games-page__action--light">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M12 11v5M12 8h.01"></path>
+          </svg>
+          {{ t().gamesPage.featured.details }}
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="games-page__grid">
+    @for (card of filteredCards(); track card.id) {
+      <article class="games-page__card">
+        <div class="games-page__card-art" [attr.data-category]="card.comingSoon ? 'soon' : card.category">
+          <img [src]="cardImage(card.id)" [alt]="card.title" loading="lazy" />
+          <span class="games-page__card-badge">
+            {{ card.comingSoon ? t().gamesPage.comingSoonBadge : categoryLabel(card.category).toUpperCase() }}
+          </span>
+        </div>
+        <div class="games-page__card-body">
+          <h3 class="games-page__card-title">{{ card.title }}</h3>
+          <p class="games-page__card-description">{{ card.description }}</p>
+          <div class="games-page__card-footer">
+            @if (card.comingSoon) {
+              <span class="games-page__card-note">{{ card.note }}</span>
+              <button type="button" class="games-page__card-cta games-page__card-cta--light">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <path d="M12 5v14M5 12h14"></path>
+                </svg>
+                {{ t().gamesPage.wishlistLabel }}
+              </button>
+            } @else {
+              <span class="games-page__rating">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 3l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.4l6.1-.8z"></path>
+                </svg>
+                {{ card.rating }}
+              </span>
+              <button type="button" class="games-page__card-cta">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <path d="M7 4.5l12 7.5-12 7.5z"></path>
+                </svg>
+                {{ t().gamesPage.playLabel }}
+              </button>
+            }
+          </div>
+        </div>
+      </article>
+    }
+  </section>
+
+  <section class="games-page__cta">
+    <div class="games-page__cta-copy">
+      <h2>{{ t().gamesPage.ctaTitle }}</h2>
+      <p>{{ t().gamesPage.ctaSubtitle }}</p>
+    </div>
+    <div class="games-page__cta-actions">
+      <a class="games-page__action games-page__action--orange" routerLink="/" fragment="contact">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 11l4-4 4 3 3-3 4 4"></path>
+          <path d="M3 11l5 6 4-3 4 3 5-6"></path>
+        </svg>
+        {{ t().gamesPage.ctaPartner }}
+      </a>
+      <a class="games-page__action games-page__action--light" routerLink="/">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M19 12H5M11 6l-6 6 6 6"></path>
+        </svg>
+        {{ t().gamesPage.backHome }}
+      </a>
+    </div>
+  </section>
+</main>

@@ -1,7 +1,8 @@
 @use 'breakpoints' as bp;
 
 .site-header {
-  position: relative;
+  position: sticky;
+  top: 0;
   z-index: 3;
   display: flex;
   flex-wrap: wrap;
@@ -9,14 +10,56 @@
   justify-content: space-between;
   gap: 1.6rem;
   padding: 1.8rem 3.6rem 0.8rem;
+  background-color: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease,
+    padding 0.3s ease;
+
+  // Only ever engages on routes that actually scroll (the home hero is a
+  // fixed single screen, so this stays inert there) — gives the sticky
+  // header a glass backdrop once content has scrolled underneath it, and
+  // shrinks the bar itself (padding + logo) so the glass strip stays neat
+  // instead of carrying the full home-hero header height down the page.
+  &--scrolled {
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+    background-color: var(--color-glass-medium);
+    border-bottom-color: var(--color-glass-border);
+    backdrop-filter: blur(1.8rem);
+    -webkit-backdrop-filter: blur(1.8rem);
+    box-shadow: var(--shadow-primary-md);
+  }
+
+  // Fixed to the logo's own (unscrolled) rendered width so shrinking the
+  // image on scroll only shrinks the image inside this box — the box
+  // itself never resizes, so the centered nav never shifts sideways.
+  &__logo-link {
+    display: flex;
+    align-items: center;
+    width: 12.7rem;
+    flex: none;
+
+    @media screen and (max-width: 767px) {
+      width: 9.7rem;
+    }
+  }
 
   &__logo {
     height: 8.4rem;
     object-fit: contain;
-    width: auto;
+    object-position: left center;
+    width: 100%;
     filter: drop-shadow(var(--shadow-logo));
+    transition: height 0.3s ease;
     @media screen and (max-width: 767px) {
       height: 6.4rem;
+    }
+  }
+
+  &--scrolled &__logo {
+    height: 5rem;
+    @media screen and (max-width: 767px) {
+      height: 4.4rem;
     }
   }
 
@@ -37,7 +80,7 @@
 
   &__link {
     color: var(--color-ink-soft);
-    padding-bottom: 0.7rem;
+    padding-bottom: 0.3rem;
     border-bottom: 0.3rem solid transparent;
     transition: color 0.2s ease;
 

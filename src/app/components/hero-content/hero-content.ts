@@ -1,11 +1,12 @@
 import { Component, computed, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { LanguageService } from '../../services/language';
 import { ModalService } from '../../services/modal';
 import { translations } from '../../i18n/translations';
 
 @Component({
   selector: 'app-hero-content',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './hero-content.html',
   styleUrl: './hero-content.scss',
 })

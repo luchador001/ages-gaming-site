@@ -24,10 +24,30 @@
     overflow: visible;
   }
 
+  // Non-home routes (e.g. /games) are normal, taller pages that should
+  // scroll like the rest of the web, not clamp to a single no-scroll
+  // screen the way the home hero does. Two classes beats the plain
+  // `.shell` and mobile-media rules above regardless of source order.
+  &.shell--scroll {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+
   // Host elements are transparent to layout so the header/main rendered
-  // inside app-header / app-hero act as the real flex items of the shell.
+  // inside app-header / app-games-page act as the real flex items of the
+  // shell.
   app-header,
-  app-hero {
+  app-games-page {
     display: contents;
+  }
+
+  // app-hero stays a real flex box (rather than display:contents) so it
+  // fills the remaining column height itself and centers/sizes its single
+  // <main class="hero"> child.
+  app-hero {
+    width: 100%;
+    display: flex;
+    height: 100%;
   }
 }
