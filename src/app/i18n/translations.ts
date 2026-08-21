@@ -34,8 +34,24 @@ export interface Translations {
     subject: string;
     message: string;
     submit: string;
+    sending: string;
     replyNote: string;
     hoursNote: string;
+    validation: {
+      nameRequired: string;
+      nameLength: string;
+      namePattern: string;
+      emailRequired: string;
+      emailInvalid: string;
+      subjectLength: string;
+      messageRequired: string;
+      messageLength: string;
+    };
+    status: {
+      success: string;
+      error: string;
+      tooFast: string;
+    };
   };
   modal: {
     close: string;
@@ -88,8 +104,24 @@ export const translations: Record<'en' | 'ru', Translations> = {
       subject: 'Subject',
       message: 'Message',
       submit: 'Send Message',
+      sending: 'Sending…',
       replyNote: 'We reply within 24h',
       hoursNote: 'Mon – Fri, 9AM – 6PM (PT)',
+      validation: {
+        nameRequired: 'Please enter your name.',
+        nameLength: 'Name must be between 2 and 80 characters.',
+        namePattern: 'Name can only contain letters, spaces, hyphens and apostrophes.',
+        emailRequired: 'Please enter your email address.',
+        emailInvalid: 'Please enter a valid email address.',
+        subjectLength: 'Subject must be under 150 characters.',
+        messageRequired: 'Please enter a message.',
+        messageLength: 'Message must be between 10 and 3000 characters.',
+      },
+      status: {
+        success: "Thanks! Your message has been sent — we'll get back to you soon.",
+        error: 'Something went wrong. Please try again later or email us directly.',
+        tooFast: 'Please take a moment before sending — try again in a couple of seconds.',
+      },
     },
     modal: {
       close: 'Close',
@@ -174,8 +206,24 @@ export const translations: Record<'en' | 'ru', Translations> = {
       subject: 'Тема',
       message: 'Сообщение',
       submit: 'Отправить сообщение',
+      sending: 'Отправка…',
       replyNote: 'Отвечаем в течение 24 часов',
       hoursNote: 'Пн–Пт, 9:00–18:00 (PT)',
+      validation: {
+        nameRequired: 'Пожалуйста, введите ваше имя.',
+        nameLength: 'Имя должно содержать от 2 до 80 символов.',
+        namePattern: 'Имя может содержать только буквы, пробелы, дефис и апостроф.',
+        emailRequired: 'Пожалуйста, введите адрес электронной почты.',
+        emailInvalid: 'Пожалуйста, введите корректный адрес электронной почты.',
+        subjectLength: 'Тема должна быть короче 150 символов.',
+        messageRequired: 'Пожалуйста, введите сообщение.',
+        messageLength: 'Сообщение должно содержать от 10 до 3000 символов.',
+      },
+      status: {
+        success: 'Спасибо! Ваше сообщение отправлено — мы скоро вам ответим.',
+        error: 'Что-то пошло не так. Попробуйте позже или напишите нам напрямую.',
+        tooFast: 'Пожалуйста, не торопитесь — повторите отправку через пару секунд.',
+      },
     },
     modal: {
       close: 'Закрыть',
